@@ -7,9 +7,9 @@
 #include<math.h>
 int main(){
 
-int i=0,N;
-N=10;
-float x[N],y[N],error[N];
+int i=0,N=10,x[N];
+
+float y[N],error[N];
 
 
 FILE *fp; //Para abrir documento para leer archivos iniciales
@@ -17,9 +17,10 @@ FILE *fp; //Para abrir documento para leer archivos iniciales
 fp=fopen("datos.txt","r");
 
 for(i=0;i<N;i++){
-	fscanf(fp,"%f %f %f",&x[i],&y[i],&error[i]);
-	printf("%f %f %f \n",x[i],y[i],error[i]);
+	fscanf(fp,"%i %f %f",&x[i],&y[i],&error[i]);
+	printf("%i %f %f \n",x[i],y[i],error[i]);
 		}
+fclose(fp);
 
 return 0;
 }
