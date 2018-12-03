@@ -5,6 +5,14 @@
 
 #include<stdio.h>
 #include<math.h>
+<<<<<<< HEAD
+int main(){
+
+int i=0,N=11,x[N];
+
+float y[N],error[N];
+=======
+>>>>>>> c5498398572a6cc12a98c257818778f03646d2c3
 
 int main(){
 
