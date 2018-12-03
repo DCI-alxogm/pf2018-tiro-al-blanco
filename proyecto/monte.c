@@ -158,7 +158,3 @@ double num_gauss(double mean, double stdDev) {
 	return mean + stdDev * u * s;
 
 }
-
-
-
-
