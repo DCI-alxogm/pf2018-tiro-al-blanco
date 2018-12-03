@@ -7,7 +7,7 @@
 #include<math.h>
 int main(){
 
-int i=0,N=10,x[N];
+int i=0,N=11,x[N];
 
 float y[N],error[N];
 
