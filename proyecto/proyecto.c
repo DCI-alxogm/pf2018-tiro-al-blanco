@@ -5,22 +5,33 @@
 
 #include<stdio.h>
 #include<math.h>
+<<<<<<< HEAD
 int main(){
 
 int i=0,N=11,x[N];
 
 float y[N],error[N];
+=======
+>>>>>>> c5498398572a6cc12a98c257818778f03646d2c3
 
+int main(){
 
-FILE *fp; //Para abrir documento para leer archivos iniciales
+	int i=0,N=11,x[N];
+	float y[N],o[N], m0, b0;
+	FILE *fp; //Para abrir documento para leer archivos iniciales
 
 fp=fopen("datos.txt","r");
 
+printf("Introduce el 
+
 for(i=0;i<N;i++){
-	fscanf(fp,"%i %f %f",&x[i],&y[i],&error[i]);
-	printf("%i %f %f \n",x[i],y[i],error[i]);
-		}
+	fscanf(fp,"%i %f %f",&x[i],&y[i],&o[i]);
+	printf("%i %f %f \n",x[i],y[i],o[i]);
+}
+
 fclose(fp);
+
+
 
 return 0;
 }
