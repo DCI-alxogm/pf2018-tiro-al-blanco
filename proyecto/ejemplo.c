@@ -3,81 +3,76 @@
 //Participantes: Diana Hernández Bustos y Diana Rosales Rosales
 //Este trabajo se comenzó el Miércoles 28 de Noviembre
 
-#include<stdio.h>
+#include<stdio.h> //Incluyo las librerías que se van a utilizar en este programa
 #include<math.h>
 #include<stdlib.h> 
 
 float likelihood(float m0, float b0, int N, int x[], float y[], float o[]);
-void calculo_monte(float* m0,float* b0,int N,  int x[], float y[], float o[], float sigmam, float sigmab);
-double num_gauss(double mean, double stdDev);
+void calculo_monte(float* m0,float* b0, int N,  int x[], float y[], float o[]);
+double num_gauss(double x, double y);
 
 int main(){
 
-	int i,N=11,x[N];
-	float y[N],o[N]; //DESVIAVCION ESTADAR ES o
-	float m0=2.5, b0=0.3;
-	
-	float mn, L=1.0,bn, s, xg, yg, Pmn, Pbn, sigmam=0.6, sigmab=0.2; 
+	int i,N=12,x[N],count=0;
+	float y[N],o[N], m0, b0; 
 	FILE *fp; //Para abrir documento para leer archivos iniciales
-
+	
 	fp=fopen("datos.txt","r");
 
-	//INTRODUCE LA M MAX Y M MIN
 	for(i=0;i<N;i++){
-		fscanf(fp,"%i %f %f",&x[i],&y[i],&o[i]);
+		if(count<N-2){	
+			fscanf(fp,"%i %f %f",&x[i],&y[i],&o[i]);
+		}		
+
+		else{
+			fscanf(fp,"%f %f",&m0,&b0);
+		}
+	count++;
 	}
 	fclose(fp);
 
-//Generar dtaos random:
-
-	
-	//printf("%le \n", lnpl);
-	//printf("%le \n", pl);
-//Llamar la funcion de calculo
-
-	calculo_monte(&m0,&b0, N, x, y, o, sigmam, sigmab);
-
-//Dar valores de sigma
+	calculo_monte(&m0, &b0, N-1, x, y, o);
 
 return 0;
 }
 
-void calculo_monte(float* m0,float* b0,int N,  int x[], float y[], float o[], float sigmam, float sigmab){
+void calculo_monte(float* m0,float* b0, int N,  int x[], float y[], float o[]){
 
-	float mn, bn, Pmn, mmin=0, mmax=5.0, bmin=0, bmax=5.0,num;
-	int i;
-	double lnpl, pl;
+	float mn, bn, Pmn, mmin, mmax, bmin, bmax,num, sigmam, sigmab;
+	int i,L;
+	double lnpl;
 	FILE *fp2;
+	FILE *fp3;
 	
-	fp2=fopen("Resultados.txt","w");	
+	fp3=fopen("parametros.txt","r");
 
-	for(i=0; i<=100000; i++){
+	fscanf(fp3, "%f %f", &sigmam, &sigmab);
+ 	fscanf(fp3, "%f %f %f %f", &mmin, &mmax, &bmin, &bmax);
+	fscanf(fp3, "%i", &L);
+
+	fclose(fp3);
+
+	fp2=fopen("Resultados.txt","w");
+
+	for(i=0; i<=L; i++){
 		lnpl= likelihood(*m0, *b0, N, x, y, o);
-		//printf("prob de likelidhood: %f \n", lnpl);
-		pl=exp(lnpl);
 		mn = num_gauss(*m0, sigmam);
 		bn = num_gauss(*b0, sigmab);
 		
-			if(mmin<mn<mmax && bmin<bn<bmax ){ 
+			if(mmin<mn<mmax && bmin<bn<bmax){ 
 				Pmn=likelihood(mn, bn, N, x, y, o); 
-				//printf("prob de nueva m y b0= %f \n", Pmn);
-					
+									
 					if(Pmn > lnpl){
 					*m0=mn;
-					//printf("m0=%f \n", m0);
 					*b0=bn;
-					//printf("b0=%f \n \n", b0);
 					}
 
 					else{
 					num=rand()*(1.0/RAND_MAX);
-					//printf("num=%f \n", num);
-					
+										
 						if(num < exp(Pmn)){
 							*m0=mn;
-							//printf("m0=%f \n", m0);
 							*b0=bn;
-							//printf("bn=%f \n \n", b0);
 						}
 					}
 			}
@@ -105,36 +100,30 @@ float likelihood(float m0, float b0, int N, int x[], float y[], float o[]){
 	return lnpl;
 }
 
-double num_gauss(double mean, double stdDev) {
-	int hasSpare = 0;
+double num_gauss(double x, double y) {
+	int aux2 = 0;
 	double spare;
 
-	if(hasSpare) {
-		hasSpare = 0;
-		return mean + stdDev * spare;
+	if(aux2) {
+		aux2 = 0;
+		return x + y * spare;
 
 	}
 
-
-	hasSpare = 1;
+	aux2 = 1;
 	double u, v, s;
 	do {
 		u = (rand() / ((double) RAND_MAX)) * 2.0 - 1.0;
-
 		v = (rand() / ((double) RAND_MAX)) * 2.0 - 1.0;
-
 		s = u * u + v * v;
-
 	}
 
 	while( (s >= 1.0) || (s == 0.0) );
 
-
 	s = sqrt(-2.0 * log(s) / s);
-
 	spare = v * s;
 
-	return mean + stdDev * u * s;
+	return x + y * u * s;
 
 }
 
